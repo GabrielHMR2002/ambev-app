@@ -1,6 +1,6 @@
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 
-public class UpdateSaleResult
+public class UpdateSaleResponse
 {
     public Guid Id { get; set; }
     public string SaleNumber { get; set; } = string.Empty;
@@ -10,10 +10,10 @@ public class UpdateSaleResult
     public string Branch { get; set; } = string.Empty;
     public bool IsCancelled { get; set; }
     public DateTime? UpdatedAt { get; set; }
-    public List<UpdateSaleItemResult> Items { get; set; } = new();
+    public List<UpdateSaleItemResponse> Items { get; set; } = new();
 }
 
-public class UpdateSaleItemResult
+public class UpdateSaleItemResponse
 {
     public Guid Id { get; set; }
     public string Product { get; set; } = string.Empty;
