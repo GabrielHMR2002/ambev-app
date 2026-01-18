@@ -1,7 +1,7 @@
 using AutoMapper;
-using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
 
-namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CancelSale;
 
 public class CancelSaleProfile : Profile
 {
@@ -10,6 +10,6 @@ public class CancelSaleProfile : Profile
         CreateMap<Guid, CancelSaleCommand>()
             .ConstructUsing(id => new CancelSaleCommand(id));
         
-        CreateMap<Sale, CancelSaleResult>();
+        CreateMap<CancelSaleResult, CancelSaleResponse>();
     }
 }
