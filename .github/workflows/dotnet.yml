@@ -1,0 +1,55 @@
+name: .NET CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 2002
+          POSTGRES_DB: DeveloperEvaluation
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d DeveloperEvaluation"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install dotnet-ef tool
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Restore dependencies
+        run: dotnet restore template/backend/Ambev.DeveloperEvaluation.sln
+
+      - name: Build solution
+        run: dotnet build template/backend/Ambev.DeveloperEvaluation.sln --no-restore --configuration Release
+
+      - name: Run EF Migrations
+        run: |
+          dotnet ef database update \
+            --project template/backend/src/Ambev.DeveloperEvaluation.ORM/Ambev.DeveloperEvaluation.ORM.csproj \
+            --startup-project template/backend/src/Ambev.DeveloperEvaluation.WebApi/ \
+            --context DefaultContext
+
+      - name: Run Unit Tests
+        run: dotnet test template/backend/tests/Ambev.DeveloperEvaluation.Unit/Ambev.DeveloperEvaluation.Unit.csproj --no-restore --verbosity normal
+
