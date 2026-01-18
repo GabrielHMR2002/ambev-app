@@ -1,4 +1,4 @@
-﻿namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetAllSales;
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetAllSales;
 
 public class GetAllSalesResponse
 {
