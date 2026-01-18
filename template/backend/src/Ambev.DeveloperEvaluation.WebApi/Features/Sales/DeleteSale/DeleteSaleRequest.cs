@@ -1,4 +1,4 @@
-﻿namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
 
 public class DeleteSaleRequest
 {
