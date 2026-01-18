@@ -1,4 +1,4 @@
-﻿namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CancelSaleItem;
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CancelSaleItem;
 
 public class CancelSaleItemRequest
 {
