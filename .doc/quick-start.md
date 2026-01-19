@@ -189,7 +189,7 @@ Access: https://localhost:7181/swagger
 - [ ] Saw the API documentation
 
 
-If you encounter any issues running the API with Docker, try following these steps:
+## ***If you encounter any issues running the API with Docker, try following these steps:***
 
 Run the following commands:
 
