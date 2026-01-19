@@ -55,6 +55,13 @@ These business rules define quantity-based discounting tiers and limitations:
    - Maximum limit: 20 items per product
    - No discounts allowed for quantities below 4 items
 
+## Prerequisites
+This section outlines the essential technologies and tools required for this project.
+
+- See [Prerequisites](./doc/prerequisites.md)
+
+---
+
 ## How to run API
 This section provides step-by-step instructions for setting up and running the API, including environment configuration, database setup, and executing migrations.
 
