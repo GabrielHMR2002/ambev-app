@@ -55,6 +55,17 @@ These business rules define quantity-based discounting tiers and limitations:
    - Maximum limit: 20 items per product
    - No discounts allowed for quantities below 4 items
 
+## How to run API
+This section provides step-by-step instructions for setting up and running the API, including environment configuration, database setup, and executing migrations.
+
+See [How to Run API](./how-to-run-api)
+
+## Project Architecture Diagram
+This section presents the architectural design of the project.
+
+See [Project Architecture Diagram](./project-architecture-diagram)
+
+
 ## Overview
 This section provides a high-level overview of the project and the various skills and competencies it aims to assess for developer candidates. 
 
