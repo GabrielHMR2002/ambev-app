@@ -28,14 +28,14 @@ docker-compose up -d --build
 
 ### 2.5️⃣ Apply database migrations
 
-## Entity Framework Core Migrations
+Entity Framework Core Migrations
 
-##  Navigate to the WebApi Project
+Navigate to the WebApi Project
 
 Open your terminal or PowerShell and go to the **WebApi** folder:
 
 ```bash
-cd template/backend/src/Ambev.DeveloperEvaluation.WebApi
+cd src/Ambev.DeveloperEvaluation.WebApi
 ```
 
 > **Note:** All commands below should be run from this directory.
