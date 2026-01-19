@@ -54,10 +54,6 @@ Update the PostgreSQL connection string:
 
 ---
 
-Absolutely! Here’s a polished **English version** of your documentation section, including the restore step and clarifications:
-
----
-
 ## 4. Entity Framework Core Migrations
 
 ### 4.1. Navigate to the WebApi Project
