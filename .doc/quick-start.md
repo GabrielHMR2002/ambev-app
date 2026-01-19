@@ -194,6 +194,12 @@ Access: https://localhost:7181/swagger
 
 Run the following commands:
 
+***You need to be in this path to run these commands:***
+
+```bash
+ambev-app\template\backend>
+```
+
 ```bash
 1. (Get-Content entrypoint.sh -Raw).Replace("`r`n","`n") | Set-Content entrypoint.sh -NoNewline
 ```
@@ -204,10 +210,6 @@ Run the following commands:
 ```bash
 3. docker-compose up -d --build     
 ```
-You need to be in this path to run these commands:
 
-```bash
-ambev-app\template\backend>
-```
 <img width="1670" height="850" alt="Screenshot 2026-01-19 060056" src="https://github.com/user-attachments/assets/0c093d27-db6d-4bc8-af14-d489859dd212" />
 
