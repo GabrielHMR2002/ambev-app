@@ -190,6 +190,7 @@ Access: https://localhost:7181/swagger
 
 
 ## ***If you encounter any issues running the API with Docker, try following these steps:***
+***In the last cases, try undoing everything and running it manually.***
 
 Run the following commands:
 
@@ -203,10 +204,10 @@ Run the following commands:
 ```bash
 3. docker-compose up -d --build     
 ```
-voce precisa estar nesse caminho aqui para rodar esses comandos:
+You need to be in this path to run these commands:
 
 ```bash
 ambev-app\template\backend>
 ```
+<img width="1670" height="850" alt="Screenshot 2026-01-19 060056" src="https://github.com/user-attachments/assets/0c093d27-db6d-4bc8-af14-d489859dd212" />
 
-***In the last cases, try undoing everything and running it manually.***
