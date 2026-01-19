@@ -63,7 +63,7 @@ See [Prerequisites](/.doc/prerequisites.md)
 ## How to run API
 This section provides step-by-step instructions for setting up and running the API, including environment configuration, database setup, and executing migrations.
 
-See [How to Run API - Quick Start (Docker)](/.doc/quick-start.md)
+See [How to Run API - Quick Start (Docker)](/.doc/quick-start.md) **If it doesn't work, try configuring it manually.**
 
 See [How to Run API - Manually](/.doc/how-to-run-api.md)
 
