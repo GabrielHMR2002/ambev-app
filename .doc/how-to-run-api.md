@@ -54,21 +54,48 @@ Update the PostgreSQL connection string:
 
 ---
 
+Absolutely! Here’s a polished **English version** of your documentation section, including the restore step and clarifications:
+
+---
+
 ## 4. Entity Framework Core Migrations
 
-Run the following command from the WebApi project directory:
+### 4.1. Navigate to the WebApi Project
 
-```
-template/backend/src/Ambev.DeveloperEvaluation.WebApi
+Open your terminal or PowerShell and go to the **WebApi** folder:
+
+```bash
+cd template/backend/src/Ambev.DeveloperEvaluation.WebApi
 ```
 
-Apply All Migrations to the Database
+> **Note:** All commands below should be run from this directory.
+
+---
+
+### 4.2. Restore NuGet Packages
+
+Before updating the database, make sure all packages for both **WebApi** and **ORM** are installed:
+
+```bash
+dotnet restore
+```
+
+---
+
+### 4.3. Apply All Migrations
+
+To update the database with all pending migrations, run:
 
 ```bash
 dotnet ef database update --project ../Ambev.DeveloperEvaluation.ORM/Ambev.DeveloperEvaluation.ORM.csproj --startup-project ./
 ```
 
-This command applies all existing migrations to your database. No need to create an initial migration if the project already includes migrations.
+> **Parameter explanation:**
+>
+> * `--project` → path to the project containing the **DbContext** (ORM).
+> * `--startup-project` → path to the project used to run the application (WebApi).
+
+<img width="959" height="461" alt="image" src="https://github.com/user-attachments/assets/5dcbe66e-c571-47ed-86c9-e275ca10e2c5" />
 ---
 
 ## 5. RabbitMQ Setup
