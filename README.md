@@ -60,6 +60,11 @@ This section provides step-by-step instructions for setting up and running the A
 
 See [How to Run API](/.doc/how-to-run-api.md)
 
+## How to use API (POST/PUT/GET/DELETE)
+This section provides detailed instructions for using the API, including creating, updating, retrieving, and deleting resources. 
+
+See [How to use API](/.doc/how-to-use-api.md)
+
 ## Project Architecture Diagram
 This section presents the architectural design of the project.
 
