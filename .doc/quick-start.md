@@ -172,7 +172,7 @@ docker-compose exec postgres psql -U developer -d developer_evaluation
 
 To develop locally without Docker for the API:
 
-See [How to use API](./how-to-use-api.md)
+See [How to run API](./how-to-run-api.md)
 
 Access: https://localhost:7181/swagger
 
