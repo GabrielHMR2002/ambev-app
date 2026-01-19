@@ -58,9 +58,7 @@ These business rules define quantity-based discounting tiers and limitations:
 ## Prerequisites
 This section outlines the essential technologies and tools required for this project.
 
-- See [Prerequisites](./doc/prerequisites.md)
-
----
+- See [Prerequisites](/.doc/prerequisites.md)
 
 ## How to run API
 This section provides step-by-step instructions for setting up and running the API, including environment configuration, database setup, and executing migrations.
