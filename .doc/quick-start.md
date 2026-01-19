@@ -18,6 +18,13 @@ cd ambev-app/template/backend
 
 ### 2️⃣ Start the entire application
 
+Run this command
+
+```bash
+(Get-Content entrypoint.sh -Raw).Replace("`r`n","`n") | Set-Content entrypoint.sh -NoNewline
+```
+and after that:
+
 ```bash
 docker-compose up -d --build
 ```
@@ -201,14 +208,14 @@ ambev-app\template\backend>
 ```
 
 ```bash
-1. (Get-Content entrypoint.sh -Raw).Replace("`r`n","`n") | Set-Content entrypoint.sh -NoNewline
+(Get-Content entrypoint.sh -Raw).Replace("`r`n","`n") | Set-Content entrypoint.sh -NoNewline
 ```
 ```bash
-2. docker-compose down
+docker-compose down
 ```
 
 ```bash
-3. docker-compose up -d --build     
+docker-compose up -d --build     
 ```
 
 <img width="1670" height="850" alt="Screenshot 2026-01-19 060056" src="https://github.com/user-attachments/assets/0c093d27-db6d-4bc8-af14-d489859dd212" />
