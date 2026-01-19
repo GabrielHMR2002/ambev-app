@@ -1,50 +1,79 @@
 version: '3.8'
 
+networks:
+  ambev-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
+
 services:
-  ambev.developerevaluation.webapi:
-    container_name: ambev_developer_evaluation_webapi
-    image: ${DOCKER_REGISTRY-}ambevdeveloperevaluationwebapi
-    build:
-      context: .
-      dockerfile: src/Ambev.DeveloperEvaluation.WebApi/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-
-  ambev.developerevaluation.database:
-    container_name: ambev_developer_evaluation_database
-    image: postgres:13
-
+  postgres:
+    container_name: ambev_postgres
+    image: postgres:13-alpine
     environment:
       POSTGRES_DB: developer_evaluation
       POSTGRES_USER: developer
       POSTGRES_PASSWORD: ev@luAt10n
     ports:
-      - "5432"
-    restart: unless-stopped
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - ambev-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U developer -d developer_evaluation"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
-  ambev.developerevaluation.nosql:
-    container_name: ambev_developer_evaluation_nosql 
-    image: mongo:8.0    
+  rabbitmq:
+    container_name: ambev_rabbitmq
+    image: rabbitmq:3.12-management-alpine
     environment:
-        MONGO_INITDB_ROOT_USERNAME: developer
-        MONGO_INITDB_ROOT_PASSWORD: ev@luAt10n
+      RABBITMQ_DEFAULT_USER: developer
+      RABBITMQ_DEFAULT_PASS: ev@luAt10n
     ports:
-      - "27017"
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - ambev-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
-  ambev.developerevaluation.cache:
-    container_name: ambev_developer_evaluation_cache 
-    image: redis:7.4.1-alpine     
-    command: redis-server --requirepass ev@luAt10n
+  api:
+    container_name: ambev_api
+    build:
+      context: .
+      dockerfile: Dockerfile  
     environment:
-       MONGO_INITDB_ROOT_USERNAME: developer
-       MONGO_INITDB_ROOT_PASSWORD: ev@luAt10n
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=developer_evaluation;Username=developer;Password=ev@luAt10n;TrustServerCertificate=True
+      - Jwt__SecretKey=YourSuperSecretKeyForJwtTokenGenerationThatShouldBeAtLeast32BytesLong
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__UserName=developer
+      - RabbitMQ__Password=ev@luAt10n
+      - RabbitMQ__VirtualHost=/
+      - RabbitMQ__ExchangeName=sales.events
+      - RabbitMQ__ExchangeType=topic
+      - RabbitMQ__Enabled=true
+      - RabbitMQ__AutoCreateQueues=true
     ports:
-       - "6379"
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ambev-network
+    restart: on-failure
