@@ -54,26 +54,19 @@ Update the PostgreSQL connection string:
 
 ---
 
-## 4. Entity Framework Core Migrations
+4. Entity Framework Core Migrations
 
-Run the following commands **from the WebApi project directory**:
+Run the following command from the WebApi project directory:
 
-```
 template/backend/src/Ambev.DeveloperEvaluation.WebApi
-```
 
-### a) Create Initial Migration
-
-```bash
-dotnet ef migrations add InitialCreate --project ../Ambev.DeveloperEvaluation.ORM/Ambev.DeveloperEvaluation.ORM.csproj --startup-project ./
-```
-
-### b) Apply Migration to the Database
+Apply All Migrations to the Database
 
 ```bash
 dotnet ef database update --project ../Ambev.DeveloperEvaluation.ORM/Ambev.DeveloperEvaluation.ORM.csproj --startup-project ./
 ```
 
+This command applies all existing migrations to your database. No need to create an initial migration if the project already includes migrations.
 ---
 
 ## 5. RabbitMQ Setup
