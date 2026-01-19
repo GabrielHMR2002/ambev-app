@@ -1,5 +1,7 @@
 # 🚀 Quick Start with Docker
 
+**If you have problems running Docker, check the last section of this document.**
+
 ## Prerequisites
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
@@ -185,3 +187,26 @@ Access: https://localhost:7181/swagger
 - [ ] Waited ~2 minutes
 - [ ] Accessed http://localhost:8080/swagger
 - [ ] Saw the API documentation
+
+
+If you encounter any issues running the API with Docker, try following these steps:
+
+Run the following commands:
+
+```bash
+1. (Get-Content entrypoint.sh -Raw).Replace("`r`n","`n") | Set-Content entrypoint.sh -NoNewline
+```
+```bash
+2. docker-compose down
+```
+
+```bash
+3. docker-compose up -d --build     
+```
+voce precisa estar nesse caminho aqui para rodar esses comandos:
+
+```bash
+ambev-app\template\backend>
+```
+
+***In the last cases, try undoing everything and running it manually.***
