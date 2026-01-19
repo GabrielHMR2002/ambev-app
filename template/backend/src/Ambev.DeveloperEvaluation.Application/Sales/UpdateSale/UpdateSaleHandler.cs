@@ -8,14 +8,34 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-
+/// <summary>
+/// Handler for updating a sale
+/// </summary>
 public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleResult>
 {
+    /// <summary>
+    /// Repository for accessing sales data
+    /// </summary>
     private readonly ISaleRepository _saleRepository;
+    /// <summary>
+    /// Mapper for object transformations
+    /// </summary>
     private readonly IMapper _mapper;
+    /// <summary>
+    /// Logger for logging information and errors
+    /// </summary>
     private readonly ILogger<UpdateSaleHandler> _logger;
+    /// <summary>
+    /// Message publisher for sending messages to RabbitMQ
+    /// </summary>
     private readonly IMessagePublisher _messagePublisher;
-
+    /// <summary>
+    /// Constructor for UpdateSaleHandler
+    /// </summary>
+    /// <param name="saleRepository"></param>
+    /// <param name="mapper"></param>
+    /// <param name="logger"></param>
+    /// <param name="messagePublisher"></param>
     public UpdateSaleHandler(
         ISaleRepository saleRepository,
         IMapper mapper,
@@ -27,7 +47,15 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         _logger = logger;
         _messagePublisher = messagePublisher;
     }
-
+    /// <summary>
+    /// Handles the update of a sale
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ValidationException"></exception>
+    /// <exception cref="KeyNotFoundException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
     public async Task<UpdateSaleResult> Handle(UpdateSaleCommand command, CancellationToken cancellationToken)
     {
         var validator = new UpdateSaleValidator();
@@ -43,18 +71,9 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         if (sale.IsCancelled)
             throw new InvalidOperationException("Cannot update a cancelled sale");
 
-        // =========================
-        // UPDATE BASIC DATA
-        // =========================
         sale.Customer = command.Customer;
         sale.Branch = command.Branch;
 
-        // =========================
-        // UPDATE ITEMS (SIMPLIFICADO)
-        // Usa Product como chave
-        // =========================
-
-        // Remove itens que não vieram no request
         var itemsToRemove = sale.Items
             .Where(existing =>
                 !command.Items.Any(i =>
@@ -66,7 +85,6 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
             sale.Items.Remove(item);
         }
 
-        // Atualiza ou adiciona itens
         foreach (var itemCommand in command.Items)
         {
             var item = sale.Items.FirstOrDefault(i =>
@@ -74,13 +92,11 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
 
             if (item != null)
             {
-                // Atualiza item existente
                 item.Quantity = itemCommand.Quantity;
                 item.UnitPrice = itemCommand.UnitPrice;
             }
             else
             {
-                // Cria novo item
                 item = new SaleItem
                 {
                     Product = itemCommand.Product,
@@ -102,14 +118,8 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
             }
         }
 
-        // =========================
-        // RECALCULATE TOTAL
-        // =========================
         sale.CalculateTotalAmount();
 
-        // =========================
-        // VALIDATE AGGREGATE
-        // =========================
         var saleValidation = sale.Validate();
         if (!saleValidation.IsValid)
         {
@@ -121,9 +131,6 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
 
         var updatedSale = await _saleRepository.UpdateAsync(sale, cancellationToken);
 
-        // =========================
-        // PUBLISH EVENT (BEST EFFORT)
-        // =========================
         try
         {
             var message = new SaleModifiedMessage

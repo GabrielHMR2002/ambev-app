@@ -12,13 +12,35 @@ namespace Ambev.DeveloperEvaluation.MessageBroker.Publishers;
 /// </summary>
 public class RabbitMQPublisher : IMessagePublisher, IDisposable
 {
+    /// <summary>
+    /// RabbitMQ settings
+    /// </summary>
     private readonly RabbitMQSettings _settings;
+    /// <summary>
+    /// Logger for logging information and errors
+    /// </summary>
     private readonly ILogger<RabbitMQPublisher> _logger;
+    /// <summary>
+    /// RabbitMQ connection and channel
+    /// </summary>
     private IConnection? _connection;
+    /// <summary>
+    /// RabbitMQ channel
+    /// </summary>
     private IModel? _channel;
+    /// <summary>
+    /// Lock object for thread safety
+    /// </summary>
     private readonly object _lock = new();
+    /// <summary>
+    /// Flag to indicate if infrastructure has been created
+    /// </summary>
     private bool _infrastructureCreated = false;
-
+    /// <summary>
+    /// Constructor for RabbitMQPublisher
+    /// </summary>
+    /// <param name="settings"></param>
+    /// <param name="logger"></param>
     public RabbitMQPublisher(RabbitMQSettings settings, ILogger<RabbitMQPublisher> logger)
     {
         _settings = settings;
@@ -81,7 +103,6 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
         {
             _logger.LogInformation("Creating RabbitMQ infrastructure...");
 
-            // Create main exchange
             _channel.ExchangeDeclare(
                 exchange: _settings.ExchangeName,
                 type: _settings.ExchangeType,
@@ -92,7 +113,6 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
             _logger.LogInformation("Exchange created: {ExchangeName} (type: {ExchangeType})", 
                 _settings.ExchangeName, _settings.ExchangeType);
 
-            // Create Dead Letter Exchange
             _channel.ExchangeDeclare(
                 exchange: _settings.DeadLetterExchangeName,
                 type: "direct",
@@ -103,7 +123,6 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
             _logger.LogInformation("Dead Letter Exchange created: {DeadLetterExchange}", 
                 _settings.DeadLetterExchangeName);
 
-            // Create Dead Letter Queue
             var dlqArgs = new Dictionary<string, object>
             {
                 { "x-queue-type", "classic" }
@@ -118,14 +137,12 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
             _logger.LogInformation("Dead Letter Queue created: {DeadLetterQueue}", 
                 _settings.DeadLetterQueueName);
 
-            // Bind Dead Letter Queue to Dead Letter Exchange
             _channel.QueueBind(
                 queue: _settings.DeadLetterQueueName,
                 exchange: _settings.DeadLetterExchangeName,
                 routingKey: "#"
             );
 
-            // Create all configured queues and bindings
             var queueConfigurations = QueueConfigurations.GetAllQueues();
             foreach (var queueConfig in queueConfigurations)
             {
@@ -158,14 +175,12 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
 
         try
         {
-            // Add dead letter exchange to queue arguments
             var queueArgs = new Dictionary<string, object>(config.Arguments)
             {
                 { "x-dead-letter-exchange", _settings.DeadLetterExchangeName },
                 { "x-queue-type", "classic" }
             };
 
-            // Declare the queue
             _channel.QueueDeclare(
                 queue: config.QueueName,
                 durable: config.Durable,
@@ -176,7 +191,6 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
 
             _logger.LogInformation("Queue created: {QueueName}", config.QueueName);
 
-            // Create bindings for each routing key
             foreach (var routingKey in config.RoutingKeys)
             {
                 _channel.QueueBind(

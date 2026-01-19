@@ -7,6 +7,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetAllSales;
 /// </summary>
 public class GetAllSalesProfile : Profile
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public GetAllSalesProfile()
     {
         CreateMap<GetAllSalesResult, GetAllSalesResponse>();

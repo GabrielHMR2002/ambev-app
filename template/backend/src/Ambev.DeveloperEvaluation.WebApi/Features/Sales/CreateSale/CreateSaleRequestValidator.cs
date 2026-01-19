@@ -6,6 +6,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
 /// </summary>
 public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public CreateSaleRequestValidator()
     {
         RuleFor(x => x.SaleNumber)
@@ -35,6 +38,9 @@ public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
 /// </summary>
 public class CreateSaleItemRequestValidator : AbstractValidator<CreateSaleItemRequest>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public CreateSaleItemRequestValidator()
     {
         RuleFor(x => x.Product)

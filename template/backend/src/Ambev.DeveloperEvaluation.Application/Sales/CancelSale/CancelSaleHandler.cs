@@ -7,14 +7,34 @@ using Ambev.DeveloperEvaluation.MessageBroker.Messages;
 using Microsoft.Extensions.Logging;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
-
+/// <summary>
+/// Handler for cancelling a sale
+/// </summary>
 public class CancelSaleHandler : IRequestHandler<CancelSaleCommand, CancelSaleResult>
 {
+    /// <summary>
+    /// Repository for accessing sales data
+    /// </summary>
     private readonly ISaleRepository _saleRepository;
+    /// <summary>
+    /// Mapper for object transformations
+    /// </summary>
     private readonly IMapper _mapper;
+    /// <summary>
+    /// Logger for logging information and errors
+    /// </summary>
     private readonly ILogger<CancelSaleHandler> _logger;
+    /// <summary>
+    /// Message publisher for sending messages to RabbitMQ
+    /// </summary>
     private readonly IMessagePublisher _messagePublisher;
-
+    /// <summary>
+    /// Constructor for CancelSaleHandler
+    /// </summary>
+    /// <param name="saleRepository"></param>
+    /// <param name="mapper"></param>
+    /// <param name="logger"></param>
+    /// <param name="messagePublisher"></param>
     public CancelSaleHandler(
         ISaleRepository saleRepository,
         IMapper mapper,
@@ -26,7 +46,15 @@ public class CancelSaleHandler : IRequestHandler<CancelSaleCommand, CancelSaleRe
         _logger = logger;
         _messagePublisher = messagePublisher;
     }
-
+    /// <summary>
+    /// Handles the cancellation of a sale
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="ValidationException"></exception>
+    /// <exception cref="KeyNotFoundException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
     public async Task<CancelSaleResult> Handle(CancelSaleCommand request, CancellationToken cancellationToken)
     {
         var validator = new CancelSaleValidator();
@@ -45,7 +73,6 @@ public class CancelSaleHandler : IRequestHandler<CancelSaleCommand, CancelSaleRe
         sale.Cancel();
         var updatedSale = await _saleRepository.UpdateAsync(sale, cancellationToken);
 
-        // Publish SaleCancelled event to RabbitMQ
         try
         {
             var message = new SaleCancelledMessage

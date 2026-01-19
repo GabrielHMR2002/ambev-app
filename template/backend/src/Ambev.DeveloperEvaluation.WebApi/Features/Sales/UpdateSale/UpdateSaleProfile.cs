@@ -7,6 +7,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 /// </summary>
 public class UpdateSaleProfile : Profile
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public UpdateSaleProfile()
     {
         CreateMap<UpdateSaleRequest, UpdateSaleCommand>();

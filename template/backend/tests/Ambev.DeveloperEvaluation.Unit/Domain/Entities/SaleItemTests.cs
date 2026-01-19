@@ -1,5 +1,4 @@
-﻿// Domain/Entities/SaleItemTests.cs
-using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using FluentAssertions;
 using Xunit;
 

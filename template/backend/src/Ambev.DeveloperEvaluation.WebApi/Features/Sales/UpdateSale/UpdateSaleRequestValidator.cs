@@ -6,6 +6,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 /// </summary>
 public class UpdateSaleRequestValidator : AbstractValidator<UpdateSaleRequest>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public UpdateSaleRequestValidator()
     {
         RuleFor(x => x.Customer)
@@ -27,6 +30,9 @@ public class UpdateSaleRequestValidator : AbstractValidator<UpdateSaleRequest>
 /// </summary>
 public class UpdateSaleItemRequestValidator : AbstractValidator<UpdateSaleItemRequest>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public UpdateSaleItemRequestValidator()
     {
         RuleFor(x => x.Product)

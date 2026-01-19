@@ -2,9 +2,14 @@ using AutoMapper;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-
+/// <summary>
+/// Profile for updating a sale
+/// </summary>
 public class UpdateSaleProfile : Profile
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public UpdateSaleProfile()
     {
         CreateMap<UpdateSaleItemCommand, SaleItem>()

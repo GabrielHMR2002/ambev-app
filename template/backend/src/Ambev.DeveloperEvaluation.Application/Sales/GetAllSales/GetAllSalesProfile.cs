@@ -2,9 +2,14 @@ using AutoMapper;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetAllSales;
-
+/// <summary>
+/// Profile for getting all sales
+/// </summary>
 public class GetAllSalesProfile : Profile
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public GetAllSalesProfile()
     {
         CreateMap<Sale, GetAllSalesResult>()

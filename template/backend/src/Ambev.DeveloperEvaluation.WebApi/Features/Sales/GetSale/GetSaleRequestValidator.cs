@@ -6,6 +6,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
 /// </summary>
 public class GetSaleRequestValidator : AbstractValidator<GetSaleRequest>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public GetSaleRequestValidator()
     {
         RuleFor(x => x.Id)

@@ -1,12 +1,15 @@
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetAllSales;
-
+/// <summary>
+/// Validator for getting all sales
+/// </summary>
 public class GetAllSalesValidator : AbstractValidator<GetAllSalesCommand>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public GetAllSalesValidator()
     {
-        // No validation rules needed for GetAllSales command
-        // This validator is included for consistency with the pattern
     }
 }

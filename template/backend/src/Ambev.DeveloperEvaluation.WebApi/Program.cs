@@ -11,7 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Ambev.DeveloperEvaluation.WebApi;
-
+/// <summary>
+/// Program class
+/// </summary>
 public class Program
 {
     public static void Main(string[] args)

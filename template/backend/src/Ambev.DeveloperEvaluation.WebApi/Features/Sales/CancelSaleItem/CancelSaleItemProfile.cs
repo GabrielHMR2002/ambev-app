@@ -7,6 +7,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CancelSaleItem;
 /// </summary>
 public class CancelSaleItemProfile : Profile
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public CancelSaleItemProfile()
     {
         CreateMap<CancelSaleItemResult, CancelSaleItemResponse>();

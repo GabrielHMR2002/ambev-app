@@ -1,9 +1,14 @@
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
-
+/// <summary>
+/// Validator for creating a sale
+/// </summary>
 public class CreateSaleValidator : AbstractValidator<CreateSaleCommand>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public CreateSaleValidator()
     {
         RuleFor(x => x.SaleNumber)
@@ -28,9 +33,14 @@ public class CreateSaleValidator : AbstractValidator<CreateSaleCommand>
         RuleForEach(x => x.Items).SetValidator(new CreateSaleItemValidator());
     }
 }
-
+/// <summary>
+/// Validator for creating a sale item
+/// </summary>
 public class CreateSaleItemValidator : AbstractValidator<CreateSaleItemCommand>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public CreateSaleItemValidator()
     {
         RuleFor(x => x.Product)

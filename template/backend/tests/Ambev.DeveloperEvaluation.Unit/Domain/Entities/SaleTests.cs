@@ -4,9 +4,6 @@ using Xunit;
 
 namespace Ambev.DeveloperEvaluation.Unit.Domain.Entities;
 
-/// <summary>
-/// Testes para a entidade Sale (Agregado)
-/// </summary>
 public class SaleTests
 {
     #region Total Amount Calculation Tests

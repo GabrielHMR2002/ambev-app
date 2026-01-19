@@ -6,6 +6,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
 /// </summary>
 public class DeleteSaleRequestValidator : AbstractValidator<DeleteSaleRequest>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public DeleteSaleRequestValidator()
     {
         RuleFor(x => x.Id)

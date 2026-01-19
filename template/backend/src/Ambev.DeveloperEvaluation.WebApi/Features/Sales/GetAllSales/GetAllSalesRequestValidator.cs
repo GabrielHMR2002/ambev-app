@@ -6,8 +6,10 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetAllSales;
 /// </summary>
 public class GetAllSalesRequestValidator : AbstractValidator<GetAllSalesRequest>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public GetAllSalesRequestValidator()
     {
-        // This validator is included for consistency with the pattern
     }
 }

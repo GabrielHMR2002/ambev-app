@@ -45,7 +45,6 @@ public class RabbitMQInitializer : IHostedService
                 using var connection = factory.CreateConnection("InfrastructureInitializer");
                 using var channel = connection.CreateModel();
 
-                // Create main exchange
                 channel.ExchangeDeclare(
                     exchange: _settings.ExchangeName,
                     type: _settings.ExchangeType,
@@ -53,7 +52,6 @@ public class RabbitMQInitializer : IHostedService
                     autoDelete: false
                 );
 
-                // Create Dead Letter Exchange
                 channel.ExchangeDeclare(
                     exchange: _settings.DeadLetterExchangeName,
                     type: "direct",
@@ -61,7 +59,6 @@ public class RabbitMQInitializer : IHostedService
                     autoDelete: false
                 );
 
-                // Create Dead Letter Queue
                 channel.QueueDeclare(
                     queue: _settings.DeadLetterQueueName,
                     durable: true,
@@ -75,7 +72,6 @@ public class RabbitMQInitializer : IHostedService
                     routingKey: "#"
                 );
 
-                // Create all application queues
                 if (_settings.AutoCreateQueues)
                 {
                     var queues = QueueConfigurations.GetAllQueues();
@@ -126,7 +122,11 @@ public class RabbitMQInitializer : IHostedService
             }
         }, cancellationToken);
     }
-
+    /// <summary>
+    /// Stops the RabbitMQ initializer service
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("RabbitMQ initializer stopped");

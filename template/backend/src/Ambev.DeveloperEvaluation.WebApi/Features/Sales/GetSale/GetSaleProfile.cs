@@ -7,6 +7,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
 /// </summary>
 public class GetSaleProfile : Profile
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public GetSaleProfile()
     {
         CreateMap<Guid, GetSaleCommand>()

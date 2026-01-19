@@ -1,9 +1,14 @@
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-
+/// <summary>
+/// Validator for updating a sale
+/// </summary>
 public class UpdateSaleValidator : AbstractValidator<UpdateSaleCommand>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public UpdateSaleValidator()
     {
         RuleFor(x => x.Id)
@@ -24,9 +29,14 @@ public class UpdateSaleValidator : AbstractValidator<UpdateSaleCommand>
         RuleForEach(x => x.Items).SetValidator(new UpdateSaleItemValidator());
     }
 }
-
+/// <summary>
+/// Validator for updating a sale item
+/// </summary>
 public class UpdateSaleItemValidator : AbstractValidator<UpdateSaleItemCommand>
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public UpdateSaleItemValidator()
     {
         RuleFor(x => x.Product)

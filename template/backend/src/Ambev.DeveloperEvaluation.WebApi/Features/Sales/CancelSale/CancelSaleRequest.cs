@@ -4,5 +4,8 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CancelSale;
 /// </summary>
 public class CancelSaleRequest
 {
+    /// <summary>
+    /// Sale Id
+    /// </summary>
     public Guid Id { get; set; }
 }

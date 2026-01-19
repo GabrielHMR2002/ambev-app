@@ -7,6 +7,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
 /// </summary>
 public class DeleteSaleProfile : Profile
 {
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public DeleteSaleProfile()
     {
         CreateMap<Guid, DeleteSaleCommand>()

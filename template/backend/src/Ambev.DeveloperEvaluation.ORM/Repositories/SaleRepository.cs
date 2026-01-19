@@ -9,6 +9,9 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories;
 /// </summary>
 public class SaleRepository : ISaleRepository
 {
+    /// <summary>
+    /// Database context
+    /// </summary>
     private readonly DefaultContext _context;
 
     public SaleRepository(DefaultContext context)

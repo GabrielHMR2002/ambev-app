@@ -1,11 +1,15 @@
 using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSaleItem;
-
+/// <summary>
+/// 
+/// </summary>
 public class CancelSaleItemProfile : Profile
-{
+{   
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public CancelSaleItemProfile()
     {
-        // Mapping can be added if needed in the future
     }
 }
