@@ -1,6 +1,7 @@
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.MessageBroker.Interfaces;
+using Ambev.DeveloperEvaluation.MessageBroker.Messages;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
@@ -13,15 +14,18 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
     private readonly ISaleRepository _saleRepository;
     private readonly IMapper _mapper;
     private readonly ILogger<UpdateSaleHandler> _logger;
+    private readonly IMessagePublisher _messagePublisher;
 
     public UpdateSaleHandler(
         ISaleRepository saleRepository,
         IMapper mapper,
-        ILogger<UpdateSaleHandler> logger)
+        ILogger<UpdateSaleHandler> logger,
+        IMessagePublisher messagePublisher)
     {
         _saleRepository = saleRepository;
         _mapper = mapper;
         _logger = logger;
+        _messagePublisher = messagePublisher;
     }
 
     public async Task<UpdateSaleResult> Handle(UpdateSaleCommand command, CancellationToken cancellationToken)
@@ -39,16 +43,54 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
         if (sale.IsCancelled)
             throw new InvalidOperationException("Cannot update a cancelled sale");
 
-        // Update basic properties
+        // =========================
+        // UPDATE BASIC DATA
+        // =========================
         sale.Customer = command.Customer;
         sale.Branch = command.Branch;
 
-        // Update items
-        sale.Items.Clear();
+        // =========================
+        // UPDATE ITEMS (SIMPLIFICADO)
+        // Usa Product como chave
+        // =========================
+
+        // Remove itens que não vieram no request
+        var itemsToRemove = sale.Items
+            .Where(existing =>
+                !command.Items.Any(i =>
+                    i.Product.Equals(existing.Product, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+
+        foreach (var item in itemsToRemove)
+        {
+            sale.Items.Remove(item);
+        }
+
+        // Atualiza ou adiciona itens
         foreach (var itemCommand in command.Items)
         {
-            var item = _mapper.Map<SaleItem>(itemCommand);
-            item.SaleId = sale.Id;
+            var item = sale.Items.FirstOrDefault(i =>
+                i.Product.Equals(itemCommand.Product, StringComparison.OrdinalIgnoreCase));
+
+            if (item != null)
+            {
+                // Atualiza item existente
+                item.Quantity = itemCommand.Quantity;
+                item.UnitPrice = itemCommand.UnitPrice;
+            }
+            else
+            {
+                // Cria novo item
+                item = new SaleItem
+                {
+                    Product = itemCommand.Product,
+                    Quantity = itemCommand.Quantity,
+                    UnitPrice = itemCommand.UnitPrice,
+                    SaleId = sale.Id
+                };
+
+                sale.Items.Add(item);
+            }
 
             try
             {
@@ -58,14 +100,16 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
             {
                 throw new ValidationException($"Item '{item.Product}': {ex.Message}");
             }
-
-            sale.Items.Add(item);
         }
 
-        // Recalculate total
+        // =========================
+        // RECALCULATE TOTAL
+        // =========================
         sale.CalculateTotalAmount();
 
-        // Validate
+        // =========================
+        // VALIDATE AGGREGATE
+        // =========================
         var saleValidation = sale.Validate();
         if (!saleValidation.IsValid)
         {
@@ -77,13 +121,51 @@ public class UpdateSaleHandler : IRequestHandler<UpdateSaleCommand, UpdateSaleRe
 
         var updatedSale = await _saleRepository.UpdateAsync(sale, cancellationToken);
 
-        // Publish event
-        var saleModifiedEvent = new SaleModifiedEvent(updatedSale);
-        _logger.LogInformation(
-            "SaleModifiedEvent: Sale {SaleNumber} modified at {OccurredAt} with new total amount {TotalAmount}",
-            saleModifiedEvent.Sale.SaleNumber,
-            saleModifiedEvent.OccurredAt,
-            saleModifiedEvent.Sale.TotalAmount);
+        // =========================
+        // PUBLISH EVENT (BEST EFFORT)
+        // =========================
+        try
+        {
+            var message = new SaleModifiedMessage
+            {
+                SaleId = updatedSale.Id,
+                SaleNumber = updatedSale.SaleNumber,
+                Customer = updatedSale.Customer,
+                TotalAmount = updatedSale.TotalAmount,
+                Branch = updatedSale.Branch,
+                OccurredAt = DateTime.UtcNow,
+                Items = updatedSale.Items.Select(i => new SaleItemMessage
+                {
+                    ItemId = i.Id,
+                    Product = i.Product,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Discount = i.Discount,
+                    TotalAmount = i.TotalAmount,
+                    IsCancelled = i.IsCancelled
+                }).ToList()
+            };
+
+            await _messagePublisher.PublishAsync(
+                message,
+                "sale.modified",
+                messageId: Guid.NewGuid().ToString(),
+                correlationId: updatedSale.Id.ToString()
+            );
+
+            _logger.LogInformation(
+                "SaleModifiedEvent published: Sale {SaleNumber}",
+                updatedSale.SaleNumber
+            );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to publish SaleModifiedEvent for Sale {SaleNumber}",
+                updatedSale.SaleNumber
+            );
+        }
 
         return _mapper.Map<UpdateSaleResult>(updatedSale);
     }

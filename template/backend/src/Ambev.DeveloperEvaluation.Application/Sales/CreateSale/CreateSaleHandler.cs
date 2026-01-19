@@ -3,7 +3,8 @@ using MediatR;
 using FluentValidation;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.Domain.Events;
+using Ambev.DeveloperEvaluation.MessageBroker.Interfaces;
+using Ambev.DeveloperEvaluation.MessageBroker.Messages;
 using Microsoft.Extensions.Logging;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
@@ -16,15 +17,18 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
     private readonly ISaleRepository _saleRepository;
     private readonly IMapper _mapper;
     private readonly ILogger<CreateSaleHandler> _logger;
+    private readonly IMessagePublisher _messagePublisher;
 
     public CreateSaleHandler(
         ISaleRepository saleRepository,
         IMapper mapper,
-        ILogger<CreateSaleHandler> logger)
+        ILogger<CreateSaleHandler> logger,
+        IMessagePublisher messagePublisher)
     {
         _saleRepository = saleRepository;
         _mapper = mapper;
         _logger = logger;
+        _messagePublisher = messagePublisher;
     }
 
     public async Task<CreateSaleResult> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
@@ -70,13 +74,48 @@ public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, CreateSaleRe
 
         var createdSale = await _saleRepository.CreateAsync(sale, cancellationToken);
 
-        // Publish event
-        var saleCreatedEvent = new SaleCreatedEvent(createdSale);
-        _logger.LogInformation(
-            "SaleCreatedEvent: Sale {SaleNumber} created at {OccurredAt} with total amount {TotalAmount}",
-            saleCreatedEvent.Sale.SaleNumber,
-            saleCreatedEvent.OccurredAt,
-            saleCreatedEvent.Sale.TotalAmount);
+        // Publish SaleCreated event to RabbitMQ
+        try
+        {
+            var message = new SaleCreatedMessage
+            {
+                SaleId = createdSale.Id,
+                SaleNumber = createdSale.SaleNumber,
+                SaleDate = createdSale.SaleDate,
+                Customer = createdSale.Customer,
+                TotalAmount = createdSale.TotalAmount,
+                Branch = createdSale.Branch,
+                OccurredAt = DateTime.UtcNow,
+                Items = createdSale.Items.Select(i => new SaleItemMessage
+                {
+                    ItemId = i.Id,
+                    Product = i.Product,
+                    Quantity = i.Quantity,
+                    UnitPrice = i.UnitPrice,
+                    Discount = i.Discount,
+                    TotalAmount = i.TotalAmount,
+                    IsCancelled = i.IsCancelled
+                }).ToList()
+            };
+
+            await _messagePublisher.PublishAsync(
+                message,
+                "sale.created",
+                messageId: Guid.NewGuid().ToString(),
+                correlationId: createdSale.Id.ToString()
+            );
+
+            _logger.LogInformation(
+                "SaleCreatedEvent published to RabbitMQ: Sale {SaleNumber} created with total amount {TotalAmount}",
+                createdSale.SaleNumber,
+                createdSale.TotalAmount
+            );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to publish SaleCreatedEvent for Sale {SaleNumber}", createdSale.SaleNumber);
+            // Don't throw - the sale was created successfully
+        }
 
         return _mapper.Map<CreateSaleResult>(createdSale);
     }

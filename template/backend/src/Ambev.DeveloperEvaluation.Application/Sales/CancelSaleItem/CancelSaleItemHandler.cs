@@ -2,7 +2,8 @@ using AutoMapper;
 using MediatR;
 using FluentValidation;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
-using Ambev.DeveloperEvaluation.Domain.Events;
+using Ambev.DeveloperEvaluation.MessageBroker.Interfaces;
+using Ambev.DeveloperEvaluation.MessageBroker.Messages;
 using Microsoft.Extensions.Logging;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSaleItem;
@@ -12,15 +13,18 @@ public class CancelSaleItemHandler : IRequestHandler<CancelSaleItemCommand, Canc
     private readonly ISaleRepository _saleRepository;
     private readonly IMapper _mapper;
     private readonly ILogger<CancelSaleItemHandler> _logger;
+    private readonly IMessagePublisher _messagePublisher;
 
     public CancelSaleItemHandler(
         ISaleRepository saleRepository,
         IMapper mapper,
-        ILogger<CancelSaleItemHandler> logger)
+        ILogger<CancelSaleItemHandler> logger,
+        IMessagePublisher messagePublisher)
     {
         _saleRepository = saleRepository;
         _mapper = mapper;
         _logger = logger;
+        _messagePublisher = messagePublisher;
     }
 
     public async Task<CancelSaleItemResult> Handle(CancelSaleItemCommand request, CancellationToken cancellationToken)
@@ -50,13 +54,38 @@ public class CancelSaleItemHandler : IRequestHandler<CancelSaleItemCommand, Canc
 
         await _saleRepository.UpdateAsync(sale, cancellationToken);
 
-        // Publish event
-        var itemCancelledEvent = new ItemCancelledEvent(item, sale.Id);
-        _logger.LogInformation(
-            "ItemCancelledEvent: Item {Product} cancelled from Sale {SaleNumber} at {OccurredAt}",
-            itemCancelledEvent.Item.Product,
-            sale.SaleNumber,
-            itemCancelledEvent.OccurredAt);
+        // Publish ItemCancelled event to RabbitMQ
+        try
+        {
+            var message = new ItemCancelledMessage
+            {
+                SaleId = sale.Id,
+                ItemId = item.Id,
+                SaleNumber = sale.SaleNumber,
+                Product = item.Product,
+                Quantity = item.Quantity,
+                UnitPrice = item.UnitPrice,
+                TotalAmount = item.TotalAmount,
+                OccurredAt = DateTime.UtcNow
+            };
+
+            await _messagePublisher.PublishAsync(
+                message,
+                "sale.item.cancelled",
+                messageId: Guid.NewGuid().ToString(),
+                correlationId: sale.Id.ToString()
+            );
+
+            _logger.LogInformation(
+                "ItemCancelledEvent published to RabbitMQ: Item {Product} cancelled from Sale {SaleNumber}",
+                item.Product,
+                sale.SaleNumber
+            );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to publish ItemCancelledEvent for Item {ItemId} in Sale {SaleNumber}", item.Id, sale.SaleNumber);
+        }
 
         return new CancelSaleItemResult
         {
