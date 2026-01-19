@@ -13,7 +13,7 @@ Open the project in your IDE:
 code .
 ```
 
-or open it with **Visual Studio**.
+or open it with **Visual Studio** **(recommended)**.
 
 ---
 
@@ -54,11 +54,13 @@ Update the PostgreSQL connection string:
 
 ---
 
-4. Entity Framework Core Migrations
+## 4. Entity Framework Core Migrations
 
 Run the following command from the WebApi project directory:
 
+```
 template/backend/src/Ambev.DeveloperEvaluation.WebApi
+```
 
 Apply All Migrations to the Database
 
