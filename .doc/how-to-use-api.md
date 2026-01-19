@@ -1,7 +1,3 @@
-Sua versão já está bastante direta e limpa, mas alguns pequenos ajustes podem deixar o documento **mais consistente e fácil de seguir**, especialmente para novos desenvolvedores/testadores:
-
----
-
 # API Test Documentation — `Sales`
 
 ### 🟢 STEP 1 — Create a Sale
