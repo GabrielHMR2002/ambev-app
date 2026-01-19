@@ -1,7 +1,9 @@
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
-
+/// <summary>
+/// Validator for CreateSaleRequest
+/// </summary>
 public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
 {
     public CreateSaleRequestValidator()
@@ -28,7 +30,9 @@ public class CreateSaleRequestValidator : AbstractValidator<CreateSaleRequest>
         RuleForEach(x => x.Items).SetValidator(new CreateSaleItemRequestValidator());
     }
 }
-
+/// <summary>
+/// Validator for CreateSaleItemRequest
+/// </summary>
 public class CreateSaleItemRequestValidator : AbstractValidator<CreateSaleItemRequest>
 {
     public CreateSaleItemRequestValidator()

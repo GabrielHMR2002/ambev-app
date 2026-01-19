@@ -1,5 +1,7 @@
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
-
+/// <summary>
+/// Response for UpdateSale feature
+/// </summary>
 public class UpdateSaleResponse
 {
     public Guid Id { get; set; }
@@ -12,7 +14,9 @@ public class UpdateSaleResponse
     public DateTime? UpdatedAt { get; set; }
     public List<UpdateSaleItemResponse> Items { get; set; } = new();
 }
-
+/// <summary>
+/// Response to update sale item
+/// </summary>
 public class UpdateSaleItemResponse
 {
     public Guid Id { get; set; }

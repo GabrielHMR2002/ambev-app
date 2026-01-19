@@ -1,7 +1,8 @@
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetAllSales;
-
+/// <summary>
+/// Request to get all sales
+/// </summary>
 public class GetAllSalesRequest
 {
-    // No properties needed for GetAll operation
     // This class is included for consistency with the pattern
 }

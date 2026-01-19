@@ -21,15 +21,12 @@ public static class MessageBrokerConfiguration
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Bind RabbitMQ settings from configuration
         var settings = new RabbitMQSettings();
         configuration.GetSection(RabbitMQSettings.SectionName).Bind(settings);
         services.AddSingleton(settings);
 
-        // Register the message publisher
         services.AddSingleton<IMessagePublisher, RabbitMQPublisher>();
 
-        // Register the infrastructure initializer as a hosted service
         services.AddHostedService<RabbitMQInitializer>();
 
         return services;

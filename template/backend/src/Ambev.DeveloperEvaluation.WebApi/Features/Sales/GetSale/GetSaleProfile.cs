@@ -2,7 +2,9 @@ using AutoMapper;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
-
+/// <summary>
+/// Profile for GetSale feature
+/// </summary>
 public class GetSaleProfile : Profile
 {
     public GetSaleProfile()

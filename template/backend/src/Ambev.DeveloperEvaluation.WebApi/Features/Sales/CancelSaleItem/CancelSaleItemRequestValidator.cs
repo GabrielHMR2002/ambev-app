@@ -1,7 +1,9 @@
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CancelSaleItem;
-
+/// <summary>
+/// Validator for CancelSaleItemRequest
+/// </summary>
 public class CancelSaleItemRequestValidator : AbstractValidator<CancelSaleItemRequest>
 {
     public CancelSaleItemRequestValidator()

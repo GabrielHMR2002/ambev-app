@@ -7,9 +7,18 @@ namespace Ambev.DeveloperEvaluation.Domain.Events;
 /// </summary>
 public class SaleCreatedEvent
 {
+    /// <summary>
+    /// Gets the sale that was created
+    /// </summary>
     public Sale Sale { get; }
+    /// <summary>
+    /// Gets the date and time when the event occurred
+    /// </summary>
     public DateTime OccurredAt { get; }
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SaleCreatedEvent"/> class.
+    /// </summary>
+    /// <param name="sale"></param>
     public SaleCreatedEvent(Sale sale)
     {
         Sale = sale;

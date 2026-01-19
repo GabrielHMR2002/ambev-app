@@ -1,5 +1,7 @@
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSale;
-
+/// <summary>
+/// Response for CreateSale feature
+/// </summary>
 public class CreateSaleResponse
 {
     public Guid Id { get; set; }
@@ -11,7 +13,9 @@ public class CreateSaleResponse
     public bool IsCancelled { get; set; }
     public List<CreateSaleItemResponse> Items { get; set; } = new();
 }
-
+/// <summary>
+/// Response to create a sale item
+/// </summary>
 public class CreateSaleItemResponse
 {
     public Guid Id { get; set; }

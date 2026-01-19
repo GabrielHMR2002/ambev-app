@@ -81,7 +81,7 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
         {
             _logger.LogInformation("Creating RabbitMQ infrastructure...");
 
-            // 1. Create main exchange
+            // Create main exchange
             _channel.ExchangeDeclare(
                 exchange: _settings.ExchangeName,
                 type: _settings.ExchangeType,
@@ -92,7 +92,7 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
             _logger.LogInformation("Exchange created: {ExchangeName} (type: {ExchangeType})", 
                 _settings.ExchangeName, _settings.ExchangeType);
 
-            // 2. Create Dead Letter Exchange
+            // Create Dead Letter Exchange
             _channel.ExchangeDeclare(
                 exchange: _settings.DeadLetterExchangeName,
                 type: "direct",
@@ -103,7 +103,7 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
             _logger.LogInformation("Dead Letter Exchange created: {DeadLetterExchange}", 
                 _settings.DeadLetterExchangeName);
 
-            // 3. Create Dead Letter Queue
+            // Create Dead Letter Queue
             var dlqArgs = new Dictionary<string, object>
             {
                 { "x-queue-type", "classic" }
@@ -118,14 +118,14 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
             _logger.LogInformation("Dead Letter Queue created: {DeadLetterQueue}", 
                 _settings.DeadLetterQueueName);
 
-            // 4. Bind Dead Letter Queue to Dead Letter Exchange
+            // Bind Dead Letter Queue to Dead Letter Exchange
             _channel.QueueBind(
                 queue: _settings.DeadLetterQueueName,
                 exchange: _settings.DeadLetterExchangeName,
                 routingKey: "#"
             );
 
-            // 5. Create all configured queues and bindings
+            // Create all configured queues and bindings
             var queueConfigurations = QueueConfigurations.GetAllQueues();
             foreach (var queueConfig in queueConfigurations)
             {
@@ -261,7 +261,7 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
                 properties.Persistent = true;
                 properties.ContentType = "application/json";
                 properties.ContentEncoding = "utf-8";
-                properties.DeliveryMode = 2; // Persistent
+                properties.DeliveryMode = 2; 
                 properties.Timestamp = new AmqpTimestamp(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
                 properties.MessageId = messageId ?? Guid.NewGuid().ToString();
                 properties.AppId = "Ambev.DeveloperEvaluation";
@@ -272,7 +272,6 @@ public class RabbitMQPublisher : IMessagePublisher, IDisposable
                     properties.CorrelationId = correlationId;
                 }
 
-                // Add custom headers
                 properties.Headers = new Dictionary<string, object>
                 {
                     { "published-at", DateTime.UtcNow.ToString("O") },

@@ -1,5 +1,7 @@
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetAllSales;
-
+/// <summary>
+/// Response for GetAllSales feature
+/// </summary>
 public class GetAllSalesResponse
 {
     public Guid Id { get; set; }
@@ -12,7 +14,9 @@ public class GetAllSalesResponse
     public DateTime CreatedAt { get; set; }
     public List<GetAllSalesItemResponse> Items { get; set; } = new();
 }
-
+/// <summary>
+/// Response to get all sales item
+/// </summary>
 public class GetAllSalesItemResponse
 {
     public Guid Id { get; set; }

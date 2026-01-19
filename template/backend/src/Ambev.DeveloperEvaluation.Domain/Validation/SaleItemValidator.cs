@@ -28,10 +28,13 @@ public class SaleItemValidator : AbstractValidator<SaleItem>
             .Must(ValidateDiscountRules)
             .WithMessage("Discount rules violated: purchases below 4 items cannot have a discount");
     }
-
+    /// <summary>
+    /// Validates discount rules for a sale item
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
     private bool ValidateDiscountRules(SaleItem item)
     {
-        // Purchases below 4 items cannot have a discount
         if (item.Quantity < 4 && item.Discount > 0)
         {
             return false;
