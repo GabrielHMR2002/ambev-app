@@ -28,11 +28,36 @@ docker-compose up -d --build
 
 ### 2.5️⃣ Apply database migrations
 
+## Entity Framework Core Migrations
+
+##  Navigate to the WebApi Project
+
+Open your terminal or PowerShell and go to the **WebApi** folder:
+
 ```bash
-docker-compose exec api dotnet ef database update --project /src/src/Ambev.DeveloperEvaluation.ORM/Ambev.DeveloperEvaluation.ORM.csproj --startup-project /src/src/Ambev.DeveloperEvaluation.WebApi
+cd template/backend/src/Ambev.DeveloperEvaluation.WebApi
 ```
 
-✅ You should see: `Done.`
+> **Note:** All commands below should be run from this directory.
+
+---
+
+### Restore NuGet Packages
+
+Before updating the database, make sure all packages for both **WebApi** and **ORM** are installed:
+
+```bash
+dotnet restore
+```
+---
+
+### Apply All Migrations
+
+To update the database with all pending migrations, run:
+
+```bash
+dotnet ef database update --project ../Ambev.DeveloperEvaluation.ORM/Ambev.DeveloperEvaluation.ORM.csproj --startup-project ./
+```
 
 ### 3️⃣ Access the application
 
