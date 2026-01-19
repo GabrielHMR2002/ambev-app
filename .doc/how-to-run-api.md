@@ -24,9 +24,9 @@ Before running the application and migrations, create the PostgreSQL database:
 1. Open **pgAdmin** or connect to PostgreSQL.
 2. Create the database:
 
-```sql
-CREATE DATABASE "DeveloperEvaluationAmbev";
-```
+<img width="959" height="200" alt="image" src="https://github.com/user-attachments/assets/bc9ca456-4da0-4be4-b660-354ff01e6b8c" />
+
+<img width="959" height="473" alt="image" src="https://github.com/user-attachments/assets/9143fc5d-fdb2-48c4-84d3-e82bb8c84bf1" />
 
 > Make sure the database name matches the one defined in the connection string.
 
