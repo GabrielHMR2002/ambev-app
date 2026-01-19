@@ -73,7 +73,7 @@ See [How to use API](/.doc/how-to-use-api.md)
 ## How to Test API
 This section explains how to test the API.
 
-See [How to Test API](/.doc/how-to-test.md)
+See [How to Test API](/.doc/how-to-run-test.md)
 
 ## Project Architecture Diagram
 This section presents the architectural design of the project.
