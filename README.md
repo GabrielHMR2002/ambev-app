@@ -58,12 +58,12 @@ These business rules define quantity-based discounting tiers and limitations:
 ## How to run API
 This section provides step-by-step instructions for setting up and running the API, including environment configuration, database setup, and executing migrations.
 
-See [How to Run API](/.doc/how-to-run-api)
+See [How to Run API](/.doc/how-to-run-api.md)
 
 ## Project Architecture Diagram
 This section presents the architectural design of the project.
 
-See [Project Architecture Diagram](/.doc/project-architecture-diagram)
+See [Project Architecture Diagram](/.doc/project-architecture-diagram.md)
 
 
 ## Overview
