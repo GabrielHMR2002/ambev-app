@@ -106,12 +106,16 @@ dotnet ef database update --project ../Ambev.DeveloperEvaluation.ORM/Ambev.Devel
 docker run -d --name ambev-rabbitmq --restart unless-stopped -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_USER=guest -e RABBITMQ_DEFAULT_PASS=guest rabbitmq:3.12-management-alpine
 ```
 
+<img width="959" height="364" alt="image" src="https://github.com/user-attachments/assets/acc58b8b-0e5c-411c-8cd4-2dc81fb7625f" />
+
+
 ### b) RabbitMQ Credentials
 
 * **Username:** `guest`
 * **Password:** `guest`
 
 Management UI: [http://localhost:15672](http://localhost:15672)
+<img width="935" height="433" alt="image" src="https://github.com/user-attachments/assets/43bfe9a4-9b74-49a5-bffd-697c167445c7" />
 
 ---
 
@@ -147,4 +151,5 @@ Swagger UI will be available at:
 ```
 https://localhost:7181/swagger/index.html
 ```
+<img width="959" height="500" alt="image" src="https://github.com/user-attachments/assets/322a19d2-5608-40bf-b3b4-e3d2a68aacee" />
 
